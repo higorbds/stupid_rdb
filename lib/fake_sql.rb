@@ -1,0 +1,47 @@
+# frozen_string_literal: true
+
+class FakeSQL
+  def initialize(database)
+    @database = database
+  end
+
+  def select(columns, result = nil)
+    return nil unless result
+
+    case columns
+    when '*'
+      columns = result.first.keys
+    when 'count'
+      return result.length
+    else
+      columns = columns.split(',').map!(&:to_sym)
+    end
+
+    result.map do |row|
+      columns.map do |column|
+        nil unless row[column]
+        row[column]
+      end
+    end
+  end
+
+  def from(table, conditions = nil)
+    return @database[table.to_sym] if !@database[table.to_sym].nil? && conditions.nil?
+
+    instance_eval("@database[:#{table}].filter { |#{table}| #{conditions[:where]} }", __FILE__, __LINE__)
+  end
+
+  def order_by(column, order, result)
+    column = column.to_sym
+
+    result.sort do |a, b|
+      compare = a[column] < b[column] ? -1 : 1
+      order == 'asc' ? compare : -compare
+    end
+  end
+
+  def insert(table, data)
+    data[:id] = from(table).length + 1
+    @database[table.to_sym].push(data)
+  end
+end
