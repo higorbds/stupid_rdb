@@ -44,4 +44,22 @@ class FakeSQL
     data[:id] = from(table).length + 1
     @database[table.to_sym].push(data)
   end
+
+  def outer_join(users, heroes)
+    users.map do |user|
+      usr_data = user
+      hero_data = heroes.find { |hero| hero[:users_id] == user[:id] }
+      usr_data.merge hero_data if hero_data
+      usr_data if hero_data
+    end
+  end
+
+  def inner_join(users, heroes)
+    result = users.select do |user|
+      temp = heroes.select { |hero| hero[:users_id] == user[:id] }
+      (temp.length > 0) ? true : false
+    end
+
+    outer_join(result, heroes)
+  end
 end
