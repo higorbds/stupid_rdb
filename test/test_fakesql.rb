@@ -44,4 +44,13 @@ describe FakeSQL do
       assert_equal @fksql.select('*', @fksql.order_by('age', 'dsc', @fksql.from('users'))).first, ['Thor Odinson', 1500, 'Asgard', 8]
     end
   end
+
+  describe 'join' do
+    it 'outer join will include nil' do
+      assert_includes @fksql.outer_join(@fksql.from('users'), @fksql.from('heroes')), nil
+    end
+    it 'inner join do not include nil values' do
+      refute_includes @fksql.inner_join(@fksql.from('users'), @fksql.from('heroes')), nil
+    end
+  end
 end
