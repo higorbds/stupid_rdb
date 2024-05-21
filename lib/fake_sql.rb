@@ -51,7 +51,7 @@ class FakeSQL
       hero_data = heroes.find { |hero| hero[:users_id] == user[:id] }
       usr_data.merge hero_data if hero_data
       usr_data if hero_data
-    end.reject(&:nil?)
+    end
   end
 
   def inner_join(users, heroes)
