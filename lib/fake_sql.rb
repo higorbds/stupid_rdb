@@ -53,4 +53,13 @@ class FakeSQL
       usr_data if hero_data
     end.reject(&:nil?)
   end
+
+  def inner_join(users, heroes)
+    result = users.select do |user|
+      temp = heroes.select { |hero| hero[:users_id] == user[:id] }
+      (temp.length > 0) ? true : false
+    end
+
+    outer_join(result, heroes)
+  end
 end
