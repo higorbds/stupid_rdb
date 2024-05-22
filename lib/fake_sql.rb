@@ -90,4 +90,8 @@ class FakeSQL
   def update_id(table, values, id)
     update_from table, values, { where: "#{table}[:id] == #{id}" }
   end
+
+  def count(result)
+    result.length
+  end
 end
