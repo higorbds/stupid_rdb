@@ -62,4 +62,17 @@ class FakeSQL
 
     outer_join(result, heroes)
   end
+
+  def delete_from(table, conditions)
+    count = 0
+    from(table, conditions).each do |row|
+      count += 1
+      from(table).delete row
+    end
+    count
+  end
+
+  def delete_id(table, id)
+    delete_from table, { where: "#{table}[:id] == #{id}" }
+  end
 end
