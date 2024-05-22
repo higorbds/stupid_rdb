@@ -75,4 +75,19 @@ class FakeSQL
   def delete_id(table, id)
     delete_from table, { where: "#{table}[:id] == #{id}" }
   end
+
+  def update_from(table, values, conditions)
+    counter = 0
+    from(table, conditions).each do |row|
+      values.each_key do |key|
+        counter += 1
+        row[key] = values[key]
+      end
+    end
+    counter
+  end
+
+  def update_id(table, values, id)
+    update_from table, values, { where: "#{table}[:id] == #{id}" }
+  end
 end
