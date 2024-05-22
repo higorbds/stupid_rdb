@@ -53,4 +53,14 @@ describe FakeSQL do
       refute_includes @fksql.inner_join(@fksql.from('users'), @fksql.from('heroes')), nil
     end
   end
+
+  describe 'delete' do
+    it 'delete_from with conditions' do
+      assert_equal @fksql.delete_from('users', { where: 'users[:id] == 36' }), 1
+    end
+
+    it 'delete_id' do
+      assert_equal @fksql.delete_id('heroes', 27), 1
+    end
+  end
 end
